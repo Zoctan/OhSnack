@@ -19,11 +19,11 @@ todoList:
 
 <table>
 	<tr>
-		<td><img src="README/1.png" width=320/></td>
-		<td><img src="README/2.png" width=320/></td>
+		<td><img src="README/1.png" width=380/></td>
+		<td><img src="README/2.png" width=380/></td>
 	</tr>
 	<tr>
-		<td><img src="README/3.png" width=320/></td>
-		<td><img src="README/4.png" width=320/></td>
+		<td><img src="README/3.png" width=380/></td>
+		<td><img src="README/4.png" width=380/></td>
 	</tr>
 </table>
