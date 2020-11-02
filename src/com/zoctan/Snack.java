@@ -2,8 +2,6 @@ package com.zoctan;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * 蛇
@@ -128,12 +126,12 @@ public class Snack {
         return head;
     }
 
-    public void setHead(int x, int y) {
-        this.head = new Coordinate(x, y);
-    }
-
     public void setHead(Coordinate head) {
         this.head = head;
+    }
+
+    public void setHead(int x, int y) {
+        this.head = new Coordinate(x, y);
     }
 
     public List<Coordinate> getBody() {

@@ -70,7 +70,7 @@ public class Data {
     /**
      * 背景音乐
      */
-    public static String backgroundMusicUrl = resourceUrl + "bg.mp3";
+    public static String backgroundMusicUrl = resourceUrl + "bg.wav";
 
     /**
      * 图标

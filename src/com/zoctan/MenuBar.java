@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.io.*;
+import java.io.File;
 
 import static com.zoctan.Data.isDebug;
 import static javax.swing.JOptionPane.*;
@@ -25,6 +25,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
     private JMenuItem aboutMenuItem;
     private JCheckBoxMenuItem musicMenuItem;
     private JCheckBoxMenuItem debugMenuItem;
+    private Player player;
 
     public MenuBar() {
         add(createFileMenu());
@@ -115,8 +116,17 @@ public class MenuBar extends JMenuBar implements ActionListener {
             // todo
             // 换皮肤
         } else if (event.getSource() == musicMenuItem) {
-            // todo
+            if (player == null) {
+                player = new Player(Data.backgroundMusicUrl);
+            }
             // 背景音乐
+            if (musicMenuItem.getState()) {
+                player.start();
+            } else {
+                player.close();
+                player = null;
+                // todo 多线程后台不清楚有没有关闭
+            }
         } else if (event.getSource() == debugMenuItem) {
             isDebug = debugMenuItem.getState();
         } else if (event.getSource() == helpMenuItem) {
