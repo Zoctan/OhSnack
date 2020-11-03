@@ -9,11 +9,16 @@ import javax.swing.*;
  */
 public class App {
 
+    public static Data data;
+    public static Panel panel;
+
     public static void main(String[] args) {
+        data = new Data();
+        panel = new Panel();
         // 窗口
-        JFrame frame = new JFrame(Data.appName);
-        frame.setIconImage(Data.icon.getImage());
-        frame.setBounds(0, 0, Data.windowsSize.getX(), Data.windowsSize.getY());
+        JFrame frame = new JFrame(data.appName);
+        frame.setIconImage(data.icon.getImage());
+        frame.setBounds(0, 0, data.windowsSize.getX(), data.windowsSize.getY());
         // 居中
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
@@ -23,7 +28,7 @@ public class App {
         frame.setJMenuBar(new MenuBar());
 
         // 面板
-        frame.add(new Panel());
+        frame.add(panel);
 
         frame.setVisible(true);
     }

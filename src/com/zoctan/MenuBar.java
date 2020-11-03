@@ -7,7 +7,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 
-import static com.zoctan.Data.isDebug;
 import static javax.swing.JOptionPane.*;
 
 /**
@@ -25,127 +24,136 @@ public class MenuBar extends JMenuBar implements ActionListener {
     private JMenuItem aboutMenuItem;
     private JCheckBoxMenuItem musicMenuItem;
     private JCheckBoxMenuItem debugMenuItem;
-    private Player player;
+    private AudioPlayer audioPlayer;
 
     public MenuBar() {
-        add(createFileMenu());
-        add(createSettingMenu());
-        add(createHelpMenu());
+        this.add(this.createFileMenu());
+        this.add(this.createSettingMenu());
+        this.add(this.createHelpMenu());
+        // 默认开启音乐
+        this.musicMenuItem.setState(true);
+        this.audioPlayer = new AudioPlayer(App.data.backgroundMusicUrl);
+        this.audioPlayer.start();
     }
 
     private JMenu createFileMenu() {
         JMenu menu = new Menu("文件(F)", this);
         // 设置快速访问符
         menu.setMnemonic(KeyEvent.VK_F);
-        openMenuItem = new JMenuItem("载入存档(L)", KeyEvent.VK_L);
-        openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_MASK));
-        menu.add(openMenuItem);
+        this.openMenuItem = new JMenuItem("载入存档(L)", KeyEvent.VK_L);
+        this.openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_MASK));
+        menu.add(this.openMenuItem);
         menu.addSeparator();
-        saveMenuItem = new JMenuItem("进度存档(S)", KeyEvent.VK_S);
-        saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
-        menu.add(saveMenuItem);
+        this.saveMenuItem = new JMenuItem("进度存档(S)", KeyEvent.VK_S);
+        this.saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
+        menu.add(this.saveMenuItem);
         menu.addSeparator();
-        exitMenuItem = new JMenuItem("退出(E)", KeyEvent.VK_E);
-        exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_MASK));
-        menu.add(exitMenuItem);
+        this.exitMenuItem = new JMenuItem("退出(E)", KeyEvent.VK_E);
+        this.exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_MASK));
+        menu.add(this.exitMenuItem);
         return menu;
     }
 
     private JMenu createSettingMenu() {
         JMenu menu = new Menu("设置(S)", this);
         menu.setMnemonic(KeyEvent.VK_S);
-        profileMenuItem = new JMenuItem("配置(P)", KeyEvent.VK_P);
-        profileMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_MASK));
-        menu.add(profileMenuItem);
+        this.profileMenuItem = new JMenuItem("配置(P)", KeyEvent.VK_P);
+        this.profileMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_MASK));
+        menu.add(this.profileMenuItem);
         menu.addSeparator();
-        skinMenuItem = new JMenuItem("皮肤(S)", KeyEvent.VK_S);
-        skinMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
-        menu.add(skinMenuItem);
+        this.skinMenuItem = new JMenuItem("皮肤(S)", KeyEvent.VK_S);
+        this.skinMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
+        menu.add(this.skinMenuItem);
         menu.addSeparator();
-        musicMenuItem = new JCheckBoxMenuItem("背景音乐(M)");
-        musicMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK));
-        menu.add(musicMenuItem);
+        this.musicMenuItem = new JCheckBoxMenuItem("背景音乐(M)");
+        this.musicMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK));
+        menu.add(this.musicMenuItem);
         menu.addSeparator();
-        debugMenuItem = new JCheckBoxMenuItem("调试(D)");
-        debugMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK));
-        menu.add(debugMenuItem);
+        this.debugMenuItem = new JCheckBoxMenuItem("调试(D)");
+        this.debugMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK));
+        menu.add(this.debugMenuItem);
         return menu;
     }
 
     private JMenu createHelpMenu() {
         JMenu menu = new Menu("帮助(H)", this);
         menu.setMnemonic(KeyEvent.VK_H);
-        helpMenuItem = new JMenuItem("文档(D)", KeyEvent.VK_D);
-        menu.add(helpMenuItem);
+        this.helpMenuItem = new JMenuItem("文档(D)", KeyEvent.VK_D);
+        menu.add(this.helpMenuItem);
         menu.addSeparator();
-        aboutMenuItem = new JMenuItem("关于(A)", KeyEvent.VK_A);
-        menu.add(aboutMenuItem);
+        this.aboutMenuItem = new JMenuItem("关于(A)", KeyEvent.VK_A);
+        menu.add(this.aboutMenuItem);
         return menu;
     }
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        if (event.getSource() == openMenuItem) {
+        if (event.getSource() == this.openMenuItem) {
             JFileChooser chooseFile = new JFileChooser();
             int returnVal = chooseFile.showOpenDialog(null);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File f = chooseFile.getSelectedFile();
-                int confirm = showDialog("confirm", "选择文件：" + chooseFile.getName(f));
-                // todo
-                // 读取数据
+                int confirm = this.showDialog("confirm", "选择文件：" + chooseFile.getName(f));
+                if (confirm == 0) {
+                    // 读取数据
+                    App.data = (Data) IoUtil.readFromFile(chooseFile.getSelectedFile().getPath());
+                    // 重绘游戏
+                    App.panel.repaint();
+                }
             }
-        } else if (event.getSource() == saveMenuItem) {
+        } else if (event.getSource() == this.saveMenuItem) {
             JFileChooser chooseFile = new JFileChooser();
             int returnVal = chooseFile.showSaveDialog(null);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File f = chooseFile.getSelectedFile();
-                int confirm = showDialog("confirm", "保存到文件：" + chooseFile.getName(f));
-                // todo
-                // 保存数据
+                int confirm = this.showDialog("confirm", "保存到文件：" + chooseFile.getName(f));
+                if (confirm == 0) {
+                    // 保存数据
+                    IoUtil.save2File(App.data, chooseFile.getSelectedFile().getPath());
+                }
             }
-        } else if (event.getSource() == exitMenuItem) {
-            int confirm = showDialog("confirm", "确定退出吗？");
+        } else if (event.getSource() == this.exitMenuItem) {
+            int confirm = this.showDialog("confirm", "确定退出吗？");
             if (confirm == JOptionPane.YES_OPTION) {
                 System.exit(0);
             }
-        } else if (event.getSource() == profileMenuItem) {
+        } else if (event.getSource() == this.profileMenuItem) {
             Form form = new Form();
             // todo
             // 读取数据到配置表单
-        } else if (event.getSource() == skinMenuItem) {
+        } else if (event.getSource() == this.skinMenuItem) {
             // todo
             // 换皮肤
-        } else if (event.getSource() == musicMenuItem) {
-            if (player == null) {
-                player = new Player(Data.backgroundMusicUrl);
+        } else if (event.getSource() == this.musicMenuItem) {
+            if (this.audioPlayer == null) {
+                this.audioPlayer = new AudioPlayer(App.data.backgroundMusicUrl);
             }
             // 背景音乐
-            if (musicMenuItem.getState()) {
-                player.start();
+            if (this.musicMenuItem.getState()) {
+                this.audioPlayer.start();
             } else {
-                player.close();
-                player = null;
-                // todo 多线程后台不清楚有没有关闭
+                this.audioPlayer.close();
+                this.audioPlayer = null;
             }
-        } else if (event.getSource() == debugMenuItem) {
-            isDebug = debugMenuItem.getState();
-        } else if (event.getSource() == helpMenuItem) {
-            showDialog("message", "<!DOCTYPE><html lang='zh'><head><meta charset='utf-8'><style>.red{color:red}</style></head><body><div>方向键控制：</div><div><span>上：<span class='red'>↑</span></span></div><div><span>下：<span class='red'>↓</span></span></div><div><span>左：<span class='red'>←</span></span></div><div><span>右：<span class='red'>→</span></span></div></body></html>");
-        } else if (event.getSource() == aboutMenuItem) {
-            showDialog("message", "<!DOCTYPE><html lang='zh'><head><meta charset='utf-8'><style>.blue{color:blue}</style></head><body><span>作者：<span class='blue'>https://github.com/Zoctan</body></html>");
+        } else if (event.getSource() == this.debugMenuItem) {
+            App.data.isDebug = this.debugMenuItem.getState();
+        } else if (event.getSource() == this.helpMenuItem) {
+            this.showDialog("message", "<!DOCTYPE><html lang='zh'><head><meta charset='utf-8'><style>.red{color:red}</style></head><body><div>方向键控制：</div><div><span>上：<span class='red'>↑</span></span></div><div><span>下：<span class='red'>↓</span></span></div><div><span>左：<span class='red'>←</span></span></div><div><span>右：<span class='red'>→</span></span></div></body></html>");
+        } else if (event.getSource() == this.aboutMenuItem) {
+            this.showDialog("message", "<!DOCTYPE><html lang='zh'><head><meta charset='utf-8'><style>.blue{color:blue}</style></head><body><span>作者：<span class='blue'>https://github.com/Zoctan</body></html>");
         }
     }
 
     private int showDialog(String type, String content) {
         switch (type) {
             case "confirm":
-                return showConfirmDialog(this.getParent(), content, Data.appName, JOptionPane.YES_NO_OPTION, QUESTION_MESSAGE);
+                return showConfirmDialog(this.getParent(), content, App.data.appName, JOptionPane.YES_NO_OPTION, QUESTION_MESSAGE);
             case "message":
                 JLabel label = new JLabel();
                 JEditorPane editorPane = new JEditorPane("text/html", content);
                 editorPane.setEditable(false);
                 editorPane.setBackground(label.getBackground());
-                showMessageDialog(this.getParent(), editorPane, Data.appName, PLAIN_MESSAGE);
+                showMessageDialog(this.getParent(), editorPane, App.data.appName, PLAIN_MESSAGE);
                 break;
             default:
                 break;

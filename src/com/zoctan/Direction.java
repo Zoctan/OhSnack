@@ -1,11 +1,13 @@
 package com.zoctan;
 
+import java.io.Serializable;
+
 /**
  * 方向
  *
  * @author Zoctan
  */
-public enum Direction {
+public enum Direction implements Serializable {
     /**
      * 向左
      */

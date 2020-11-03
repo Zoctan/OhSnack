@@ -1,5 +1,6 @@
 package com.zoctan;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  *
  * @author Zoctan
  */
-public class Snack {
+public class Snack implements Serializable {
     private Coordinate head;
     private List<Coordinate> body;
     private int bodyLength;
@@ -27,7 +28,7 @@ public class Snack {
      * @throws Exception 异常
      */
     public Snack(int headX, int headY, int initBodyLength, Direction direction) throws Exception {
-        checkInit(headX, headY, initBodyLength, direction);
+        this.checkInit(headX, headY, initBodyLength, direction);
 
         this.body = new ArrayList<>();
         // 设置头部
@@ -36,59 +37,59 @@ public class Snack {
         for (int i = 1; i <= initBodyLength; i++) {
             switch (direction) {
                 case LEFT:
-                    this.eat(headX - i * Data.cellSize, headY);
+                    this.eat(headX - i * App.data.cellSize, headY);
                     break;
                 default:
                 case RIGHT:
-                    this.eat(headX + i * Data.cellSize, headY);
+                    this.eat(headX + i * App.data.cellSize, headY);
                     break;
                 case UP:
-                    this.eat(headX, headY - i * Data.cellSize);
+                    this.eat(headX, headY - i * App.data.cellSize);
                     break;
                 case DOWN:
-                    this.eat(headX, headY + i * Data.cellSize);
+                    this.eat(headX, headY + i * App.data.cellSize);
                     break;
             }
         }
     }
 
     private void checkInit(int headX, int headY, int initBodyLength, Direction direction) throws Exception {
-        if (Data.cellSize >= headX || headX >= Data.mapSize.getX()) {
-            throw new Exception(String.format("初始头部横坐标X超出范围：%d~%d", Data.cellSize * 2, Data.mapSize.getX() - Data.cellSize));
+        if (App.data.cellSize >= headX || headX >= App.data.mapSize.getX()) {
+            throw new Exception(String.format("初始头部横坐标X超出范围：%d~%d", App.data.cellSize * 2, App.data.mapSize.getX() - App.data.cellSize));
         }
-        if (Data.cellSize >= headY || headY >= Data.mapSize.getY()) {
-            throw new Exception(String.format("初始头部纵坐标Y超出范围：%d~%d", Data.cellSize * 2, Data.mapSize.getY() - Data.cellSize));
+        if (App.data.cellSize >= headY || headY >= App.data.mapSize.getY()) {
+            throw new Exception(String.format("初始头部纵坐标Y超出范围：%d~%d", App.data.cellSize * 2, App.data.mapSize.getY() - App.data.cellSize));
         }
         if (initBodyLength < 1) {
             throw new Exception("初始身体太短");
         }
         // 身体 + 头部
-        int totalLength = (initBodyLength + 1) * Data.cellSize;
+        int totalLength = (initBodyLength + 1) * App.data.cellSize;
         // 横向初始化
         if (Direction.LEFT == direction || Direction.RIGHT == direction) {
-            if (totalLength > Data.mapSize.getX()) {
+            if (totalLength > App.data.mapSize.getX()) {
                 throw new Exception("初始总长超出横长");
             }
             if (Direction.LEFT == direction) {
-                if ((headX - initBodyLength * Data.cellSize) < Data.cellSize) {
+                if ((headX - initBodyLength * App.data.cellSize) < App.data.cellSize) {
                     throw new Exception("除去头部，初始向左身体长度超出横长");
                 }
             } else {
-                if ((headX + initBodyLength * Data.cellSize) > Data.mapSize.getX()) {
+                if ((headX + initBodyLength * App.data.cellSize) > App.data.mapSize.getX()) {
                     throw new Exception("除去头部，初始向右身体长度超出横长");
                 }
             }
         } else {
             // 纵向初始化
-            if (totalLength > Data.mapSize.getY()) {
+            if (totalLength > App.data.mapSize.getY()) {
                 throw new Exception("初始总长超出纵长");
             }
             if (Direction.UP == direction) {
-                if ((headY - initBodyLength * Data.cellSize) < Data.cellSize) {
+                if ((headY - initBodyLength * App.data.cellSize) < App.data.cellSize) {
                     throw new Exception("除去头部，初始向上身体长度超出纵长");
                 }
             } else {
-                if ((headY + initBodyLength * Data.cellSize) > Data.mapSize.getY()) {
+                if ((headY + initBodyLength * App.data.cellSize) > App.data.mapSize.getY()) {
                     throw new Exception("除去头部，初始向下身体长度超出纵长");
                 }
             }
@@ -108,10 +109,10 @@ public class Snack {
 
     public boolean isBeatWall() {
         Coordinate head = this.getHead();
-        if (head.getX() <= Data.mapStart.getX() - Data.cellSize || head.getY() <= Data.mapStart.getY() - Data.cellSize) {
+        if (head.getX() <= App.data.mapStart.getX() - App.data.cellSize || head.getY() <= App.data.mapStart.getY() - App.data.cellSize) {
             return true;
         }
-        if (head.getX() >= Data.mapSize.getX() || head.getY() >= Data.headerSize.getY() + Data.mapSize.getY()) {
+        if (head.getX() >= App.data.mapSize.getX() || head.getY() >= App.data.headerSize.getY() + App.data.mapSize.getY()) {
             return true;
         }
         return false;
@@ -123,7 +124,7 @@ public class Snack {
     }
 
     public Coordinate getHead() {
-        return head;
+        return this.head;
     }
 
     public void setHead(Coordinate head) {
@@ -135,7 +136,7 @@ public class Snack {
     }
 
     public List<Coordinate> getBody() {
-        return body;
+        return this.body;
     }
 
     public void setBody(List<Coordinate> body) {
@@ -143,10 +144,11 @@ public class Snack {
     }
 
     public int getBodyLength() {
-        return bodyLength;
+        return this.bodyLength;
     }
 
     public void setBodyLength(int bodyLength) {
         this.bodyLength = bodyLength;
     }
+
 }

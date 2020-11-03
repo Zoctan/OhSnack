@@ -1,12 +1,7 @@
 package com.zoctan;
 
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
-
-import java.io.BufferedInputStream;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import javax.swing.*;
+import java.applet.AudioClip;
 
 /**
  * 播放器
@@ -14,45 +9,27 @@ import java.util.concurrent.Future;
  * @author Zoctan
  */
 public class AudioPlayer extends Thread {
-
-    Player player;
-    BufferedInputStream buffer;
-    ExecutorService executorService;
-    Future future;
+    AudioClip player;
+    String music;
 
     public AudioPlayer(String music) {
-        this.buffer = new BufferedInputStream(this.getClass().getResourceAsStream(music));
-        try {
-            this.player = new Player(this.buffer);
-        } catch (JavaLayerException e) {
-            e.printStackTrace();
-        }
-        executorService = Executors.newSingleThreadExecutor();
+        this.music = music;
     }
 
     public void play() {
-        if (future != null) {
-            try {
-                this.player.play();
-            } catch (JavaLayerException e) {
-                e.printStackTrace();
-            }
-        } else {
-            future = executorService.submit(this);
-        }
+        this.player = JApplet.newAudioClip(this.getClass().getResource(this.music));
+        this.player.play();
     }
 
     public void close() {
-        this.player.close();
+        this.player.stop();
+        this.interrupt();
     }
 
     @Override
     public void run() {
         super.run();
-        try {
-            this.player.play();
-        } catch (JavaLayerException e) {
-            e.printStackTrace();
-        }
+        this.play();
     }
+
 }

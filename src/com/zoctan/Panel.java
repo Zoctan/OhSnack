@@ -8,7 +8,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Random;
 
-import static com.zoctan.Data.*;
 import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
@@ -17,42 +16,45 @@ import static javax.swing.JOptionPane.showMessageDialog;
  * @author Zoctan
  */
 public class Panel extends JPanel implements KeyListener, ActionListener {
-
-    Timer timer = new Timer(1000 / frames, this);
+    Timer timer;
     Random random = new Random();
 
     public Panel() {
-        init();
+        this.init();
         this.setFocusable(true);
         this.addKeyListener(this);
-        timer.start();
+        this.timer.start();
     }
 
     private void init() {
-        score = 0;
-        snackDirection = Direction.LEFT;
-        moveDirection = Direction.RIGHT;
+        this.timer = new Timer(1000 / App.data.frames, this);
+        App.data.score = 0;
+        App.data.snackDirection = Direction.LEFT;
+        App.data.moveDirection = Direction.RIGHT;
         try {
-            snack = new Snack(cellSize * 2, mapStart.getY() + cellSize, 1, snackDirection);
+            App.data.snack = new Snack(App.data.cellSize * 2,
+                    App.data.mapStart.getY() + App.data.cellSize,
+                    1,
+                    App.data.snackDirection);
         } catch (Exception e) {
-            showMessageDialog(this, e.getMessage(), appName, JOptionPane.ERROR_MESSAGE);
+            showMessageDialog(this, e.getMessage(), App.data.appName, JOptionPane.ERROR_MESSAGE);
             System.exit(1);
         }
         this.makeFood();
     }
 
     private void makeFood() {
-        food.setX(cellSize * (1 + random.nextInt(mapSize.getX() / cellSize - 1)));
-        food.setY(mapStart.getY() + cellSize * random.nextInt(mapSize.getY() / cellSize - 1));
-        if (isFoodOnBody()) {
-            makeFood();
+        App.data.food.setX(App.data.cellSize * (1 + this.random.nextInt(App.data.mapSize.getX() / App.data.cellSize - 1)));
+        App.data.food.setY(App.data.mapStart.getY() + App.data.cellSize * this.random.nextInt(App.data.mapSize.getY() / App.data.cellSize - 1));
+        if (this.isFoodOnBody()) {
+            this.makeFood();
         }
     }
 
     private boolean isFoodOnBody() {
-        for (int i = 0; i < snack.getBodyLength(); i++) {
-            Coordinate body = snack.getBody().get(i);
-            if (body.getX() == food.getX() && body.getY() == food.getY()) {
+        for (int i = 0; i < App.data.snack.getBodyLength(); i++) {
+            Coordinate body = App.data.snack.getBody().get(i);
+            if (body.getX() == App.data.food.getX() && body.getY() == App.data.food.getY()) {
                 return true;
             }
         }
@@ -65,48 +67,48 @@ public class Panel extends JPanel implements KeyListener, ActionListener {
         // 背景颜色
         this.setBackground(Color.WHITE);
         // 顶部图片
-        graphics.drawImage(headerIcon.getImage(), headerStart.getX(), headerStart.getY(), headerSize.getX(), headerSize.getY(), headerIcon.getImageObserver());
+        graphics.drawImage(App.data.headerIcon.getImage(), App.data.headerStart.getX(), App.data.headerStart.getY(), App.data.headerSize.getX(), App.data.headerSize.getY(), App.data.headerIcon.getImageObserver());
         // 网格
-        graphics.fillRect(mapStart.getX(), mapStart.getY(), mapSize.getX(), mapSize.getY());
+        graphics.fillRect(App.data.mapStart.getX(), App.data.mapStart.getY(), App.data.mapSize.getX(), App.data.mapSize.getY());
 
         // 蛇头
-        switch (snackDirection) {
+        switch (App.data.snackDirection) {
             case LEFT:
-                leftHeadIcon.paintIcon(this, graphics, snack.getHead().getX(), snack.getHead().getY());
+                App.data.leftHeadIcon.paintIcon(this, graphics, App.data.snack.getHead().getX(), App.data.snack.getHead().getY());
                 break;
             default:
             case RIGHT:
-                rightHeadIcon.paintIcon(this, graphics, snack.getHead().getX(), snack.getHead().getY());
+                App.data.rightHeadIcon.paintIcon(this, graphics, App.data.snack.getHead().getX(), App.data.snack.getHead().getY());
                 break;
             case UP:
-                upHeadIcon.paintIcon(this, graphics, snack.getHead().getX(), snack.getHead().getY());
+                App.data.upHeadIcon.paintIcon(this, graphics, App.data.snack.getHead().getX(), App.data.snack.getHead().getY());
                 break;
             case DOWN:
-                downHeadIcon.paintIcon(this, graphics, snack.getHead().getX(), snack.getHead().getY());
+                App.data.downHeadIcon.paintIcon(this, graphics, App.data.snack.getHead().getX(), App.data.snack.getHead().getY());
                 break;
         }
         // 蛇身
-        for (int i = 0; i < snack.getBodyLength(); i++) {
-            bodyIcon.paintIcon(this, graphics, snack.getBody().get(i).getX(), snack.getBody().get(i).getY());
+        for (int i = 0; i < App.data.snack.getBodyLength(); i++) {
+            App.data.bodyIcon.paintIcon(this, graphics, App.data.snack.getBody().get(i).getX(), App.data.snack.getBody().get(i).getY());
         }
 
         // 食物
-        foodIcon.paintIcon(this, graphics, food.getX(), food.getY());
+        App.data.foodIcon.paintIcon(this, graphics, App.data.food.getX(), App.data.food.getY());
 
         // 文字提示
         graphics.setFont(new Font("微软雅黑", Font.BOLD, 18));
-        if (!isStart) {
+        if (!App.data.isStart) {
             graphics.setColor(Color.WHITE);
-            graphics.drawString("按下空格开始游戏", mapStart.getX() + cellSize, mapStart.getY() + cellSize - 5);
+            graphics.drawString("按下空格开始游戏", App.data.mapStart.getX() + App.data.cellSize, App.data.mapStart.getY() + App.data.cellSize - 5);
         }
-        if (isFail) {
+        if (App.data.isFail) {
             graphics.setColor(Color.RED);
-            graphics.drawString("游戏失败，按下空格重新开始", mapStart.getX() + cellSize, mapStart.getY() + cellSize - 5);
+            graphics.drawString("游戏失败，按下空格重新开始", App.data.mapStart.getX() + App.data.cellSize, App.data.mapStart.getY() + App.data.cellSize - 5);
         }
-        if (isDebug) {
+        if (App.data.isDebug) {
             graphics.setColor(Color.RED);
-            graphics.drawString(String.format("小蛇：(%d, %d)", snack.getHead().getX(), snack.getHead().getY()), cellSize, cellSize);
-            graphics.drawString(String.format("食物：(%d, %d)", food.getX(), food.getY()), cellSize, cellSize * 2);
+            graphics.drawString(String.format("小蛇：(%d, %d)", App.data.snack.getHead().getX(), App.data.snack.getHead().getY()), App.data.cellSize, App.data.cellSize);
+            graphics.drawString(String.format("食物：(%d, %d)", App.data.food.getX(), App.data.food.getY()), App.data.cellSize, App.data.cellSize * 2);
         }
     }
 
@@ -116,11 +118,11 @@ public class Panel extends JPanel implements KeyListener, ActionListener {
 
         // 空格键
         if (KeyEvent.VK_SPACE == keyCode) {
-            if (isFail) {
-                isFail = false;
+            if (App.data.isFail) {
+                App.data.isFail = false;
                 this.init();
             } else {
-                isStart = !isStart;
+                App.data.isStart = !App.data.isStart;
             }
             // 重绘界面
             this.repaint();
@@ -128,16 +130,16 @@ public class Panel extends JPanel implements KeyListener, ActionListener {
             // 方向键
             switch (keyCode) {
                 case KeyEvent.VK_LEFT:
-                    moveDirection = Direction.LEFT;
+                    App.data.moveDirection = Direction.LEFT;
                     break;
                 case KeyEvent.VK_RIGHT:
-                    moveDirection = Direction.RIGHT;
+                    App.data.moveDirection = Direction.RIGHT;
                     break;
                 case KeyEvent.VK_UP:
-                    moveDirection = Direction.UP;
+                    App.data.moveDirection = Direction.UP;
                     break;
                 case KeyEvent.VK_DOWN:
-                    moveDirection = Direction.DOWN;
+                    App.data.moveDirection = Direction.DOWN;
                     break;
                 default:
                     break;
@@ -147,44 +149,44 @@ public class Panel extends JPanel implements KeyListener, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (isStart && !isFail) {
+        if (App.data.isStart && !App.data.isFail) {
             // 尾部向前推 2->1->0
-            for (int i = snack.getBodyLength() - 1; i > 0; i--) {
-                snack.getBody().get(i).setX(snack.getBody().get(i - 1).getX());
-                snack.getBody().get(i).setY(snack.getBody().get(i - 1).getY());
+            for (int i = App.data.snack.getBodyLength() - 1; i > 0; i--) {
+                App.data.snack.getBody().get(i).setX(App.data.snack.getBody().get(i - 1).getX());
+                App.data.snack.getBody().get(i).setY(App.data.snack.getBody().get(i - 1).getY());
             }
             // 0->头部
-            snack.getBody().get(0).setX(snack.getHead().getX());
-            snack.getBody().get(0).setY(snack.getHead().getY());
+            App.data.snack.getBody().get(0).setX(App.data.snack.getHead().getX());
+            App.data.snack.getBody().get(0).setY(App.data.snack.getHead().getY());
             // 移动
-            switch (moveDirection) {
+            switch (App.data.moveDirection) {
                 case LEFT:
-                    snack.getHead().setX(snack.getHead().getX() - cellSize);
+                    App.data.snack.getHead().setX(App.data.snack.getHead().getX() - App.data.cellSize);
                     break;
                 default:
                 case RIGHT:
-                    snack.getHead().setX(snack.getHead().getX() + cellSize);
+                    App.data.snack.getHead().setX(App.data.snack.getHead().getX() + App.data.cellSize);
                     break;
                 case UP:
-                    snack.getHead().setY(snack.getHead().getY() - cellSize);
+                    App.data.snack.getHead().setY(App.data.snack.getHead().getY() - App.data.cellSize);
                     break;
                 case DOWN:
-                    snack.getHead().setY(snack.getHead().getY() + cellSize);
+                    App.data.snack.getHead().setY(App.data.snack.getHead().getY() + App.data.cellSize);
                     break;
             }
             // 吃自己 || 撞墙
-            isFail = snack.isEatSelf() || snack.isBeatWall();
+            App.data.isFail = App.data.snack.isEatSelf() || App.data.snack.isBeatWall();
 
             // 是否吃到食物
-            if (snack.getHead().getX() == food.getX() && snack.getHead().getY() == food.getY()) {
-                snack.eat(food.getX(), food.getY());
+            if (App.data.snack.getHead().getX() == App.data.food.getX() && App.data.snack.getHead().getY() == App.data.food.getY()) {
+                App.data.snack.eat(App.data.food.getX(), App.data.food.getY());
                 this.makeFood();
-                score++;
+                App.data.score++;
             }
 
             this.repaint();
         }
-        timer.start();
+        this.timer.start();
     }
 
     @Override

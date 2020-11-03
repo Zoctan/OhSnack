@@ -18,7 +18,7 @@ public class Menu extends JMenu {
 
     @Override
     public JMenuItem add(JMenuItem item) {
-        item.addActionListener(listener);
+        item.addActionListener(this.listener);
         return super.add(item);
     }
 }

@@ -1,11 +1,13 @@
 package com.zoctan;
 
+import java.io.Serializable;
+
 /**
  * 坐标
  *
  * @author Zoctan
  */
-public class Coordinate {
+public class Coordinate implements Serializable {
     private int x;
     private int y;
 
@@ -18,7 +20,7 @@ public class Coordinate {
     }
 
     public int getX() {
-        return x;
+        return this.x;
     }
 
     public void setX(int x) {
@@ -26,7 +28,7 @@ public class Coordinate {
     }
 
     public int getY() {
-        return y;
+        return this.y;
     }
 
     public void setY(int y) {
