@@ -10,11 +10,11 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-\.idea/*
+.idea
 
-out/
+out
 
-releases/*
+releases
 
 # Package Files #
 *.jar
