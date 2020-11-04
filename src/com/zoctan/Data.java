@@ -66,12 +66,17 @@ public class Data implements Serializable {
     /**
      * 角色资源文件夹
      */
-    public String roleUrl = this.resourceUrl + "role/dog/";
+    public String roleUrl = this.resourceUrl + "role/cat/";
 
     /**
      * 背景音乐
      */
-    public String backgroundMusicUrl = this.resourceUrl + "bg.wav";
+    public String backgroundMusicUrl = this.resourceUrl + "music/bg.wav";
+
+    /**
+     * 吃到食物音乐
+     */
+    public String eatMusicUrl = this.resourceUrl + "music/eat.wav";
 
     /**
      * 图标

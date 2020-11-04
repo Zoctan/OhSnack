@@ -112,7 +112,7 @@ public class Snack implements Serializable {
         if (head.getX() <= App.data.mapStart.getX() - App.data.cellSize || head.getY() <= App.data.mapStart.getY() - App.data.cellSize) {
             return true;
         }
-        if (head.getX() >= App.data.mapSize.getX() || head.getY() >= App.data.headerSize.getY() + App.data.mapSize.getY()) {
+        if (head.getX() >= App.data.mapSize.getX() || head.getY() >= App.data.headerSize.getY() + App.data.mapSize.getY() - App.data.cellSize) {
             return true;
         }
         return false;

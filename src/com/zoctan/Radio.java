@@ -14,4 +14,9 @@ public class Radio extends JRadioButton {
         super(name);
         this.addActionListener(listener);
     }
+
+    public Radio(String iconPath, boolean selected, ActionListener listener) {
+        super(iconPath, selected);
+        this.addActionListener(listener);
+    }
 }

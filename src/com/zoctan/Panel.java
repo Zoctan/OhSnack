@@ -16,18 +16,15 @@ import static javax.swing.JOptionPane.showMessageDialog;
  * @author Zoctan
  */
 public class Panel extends JPanel implements KeyListener, ActionListener {
-    Timer timer;
     Random random = new Random();
 
     public Panel() {
         this.init();
         this.setFocusable(true);
         this.addKeyListener(this);
-        this.timer.start();
     }
 
     private void init() {
-        this.timer = new Timer(1000 / App.data.frames, this);
         App.data.score = 0;
         App.data.snackDirection = Direction.LEFT;
         App.data.moveDirection = Direction.RIGHT;
@@ -106,10 +103,12 @@ public class Panel extends JPanel implements KeyListener, ActionListener {
             graphics.drawString("游戏失败，按下空格重新开始", App.data.mapStart.getX() + App.data.cellSize, App.data.mapStart.getY() + App.data.cellSize - 5);
         }
         if (App.data.isDebug) {
-            graphics.setColor(Color.RED);
+            graphics.setFont(new Font("微软雅黑", Font.BOLD, 20));
+            graphics.setColor(Color.WHITE);
             graphics.drawString(String.format("小蛇：(%d, %d)", App.data.snack.getHead().getX(), App.data.snack.getHead().getY()), App.data.cellSize, App.data.cellSize);
             graphics.drawString(String.format("食物：(%d, %d)", App.data.food.getX(), App.data.food.getY()), App.data.cellSize, App.data.cellSize * 2);
         }
+        this.repaint();
     }
 
     @Override
@@ -150,28 +149,21 @@ public class Panel extends JPanel implements KeyListener, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (App.data.isStart && !App.data.isFail) {
-            // 尾部向前推 2->1->0
-            for (int i = App.data.snack.getBodyLength() - 1; i > 0; i--) {
-                App.data.snack.getBody().get(i).setX(App.data.snack.getBody().get(i - 1).getX());
-                App.data.snack.getBody().get(i).setY(App.data.snack.getBody().get(i - 1).getY());
-            }
-            // 0->头部
-            App.data.snack.getBody().get(0).setX(App.data.snack.getHead().getX());
-            App.data.snack.getBody().get(0).setY(App.data.snack.getHead().getY());
+            this.paintSnack();
             // 移动
             switch (App.data.moveDirection) {
+                case UP:
+                    App.data.snack.getHead().setY(App.data.snack.getHead().getY() - App.data.cellSize);
+                    break;
+                case DOWN:
+                    App.data.snack.getHead().setY(App.data.snack.getHead().getY() + App.data.cellSize);
+                    break;
                 case LEFT:
                     App.data.snack.getHead().setX(App.data.snack.getHead().getX() - App.data.cellSize);
                     break;
                 default:
                 case RIGHT:
                     App.data.snack.getHead().setX(App.data.snack.getHead().getX() + App.data.cellSize);
-                    break;
-                case UP:
-                    App.data.snack.getHead().setY(App.data.snack.getHead().getY() - App.data.cellSize);
-                    break;
-                case DOWN:
-                    App.data.snack.getHead().setY(App.data.snack.getHead().getY() + App.data.cellSize);
                     break;
             }
             // 吃自己 || 撞墙
@@ -180,13 +172,25 @@ public class Panel extends JPanel implements KeyListener, ActionListener {
             // 是否吃到食物
             if (App.data.snack.getHead().getX() == App.data.food.getX() && App.data.snack.getHead().getY() == App.data.food.getY()) {
                 App.data.snack.eat(App.data.food.getX(), App.data.food.getY());
+                this.paintSnack();
                 this.makeFood();
                 App.data.score++;
+                AudioPlayer.play(App.data.eatMusicUrl);
             }
 
             this.repaint();
         }
-        this.timer.start();
+    }
+
+    public void paintSnack() {
+        // 尾部向前推 2->1->0
+        for (int i = App.data.snack.getBodyLength() - 1; i > 0; i--) {
+            App.data.snack.getBody().get(i).setX(App.data.snack.getBody().get(i - 1).getX());
+            App.data.snack.getBody().get(i).setY(App.data.snack.getBody().get(i - 1).getY());
+        }
+        // 0->头部
+        App.data.snack.getBody().get(0).setX(App.data.snack.getHead().getX());
+        App.data.snack.getBody().get(0).setY(App.data.snack.getHead().getY());
     }
 
     @Override

@@ -97,7 +97,12 @@ public class MenuBar extends JMenuBar implements ActionListener {
                 if (confirm == 0) {
                     // 读取数据
                     App.data = (Data) IoUtil.readFromFile(chooseFile.getSelectedFile().getPath());
+                    // 速度读取
+                    App.timer.stop();
+                    App.timer.setDelay(1000 / App.data.frames);
+                    App.timer.start();
                     // 重绘游戏
+                    App.setFrame(App.data.windowsSize.getX(), App.data.windowsSize.getY());
                     App.panel.repaint();
                 }
             }
@@ -118,12 +123,9 @@ public class MenuBar extends JMenuBar implements ActionListener {
                 System.exit(0);
             }
         } else if (event.getSource() == this.profileMenuItem) {
-            Form form = new Form();
-            // todo
-            // 读取数据到配置表单
+            new Profile("配置");
         } else if (event.getSource() == this.skinMenuItem) {
-            // todo
-            // 换皮肤
+            new Skin("皮肤");
         } else if (event.getSource() == this.musicMenuItem) {
             if (this.audioPlayer == null) {
                 this.audioPlayer = new AudioPlayer(App.data.backgroundMusicUrl);

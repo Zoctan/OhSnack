@@ -16,9 +16,17 @@ public class AudioPlayer extends Thread {
         this.music = music;
     }
 
+    public static void play(String music) {
+        try {
+            JApplet.newAudioClip(AudioPlayer.class.getResource(music)).play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void play() {
         this.player = JApplet.newAudioClip(this.getClass().getResource(this.music));
-        this.player.play();
+        this.player.loop();
     }
 
     public void close() {
