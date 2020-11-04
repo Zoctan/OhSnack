@@ -33,7 +33,7 @@ public class Skin extends JFrame implements ActionListener {
 
         Box box1 = Box.createHorizontalBox();
         for (int i = 0; i < this.skins.length; i++) {
-            URL head = this.getClass().getResource(this.skins[i][1] + "/upHead.png");
+            URL head = this.getClass().getResource(this.skins[i][1] + "upHead.png");
             String html = "<html><table><tr><td><img src='" + head + "' /></td></tr><tr><td>" + this.skins[i][0] + "</td></tr></html>";
             this.skinRadio[i] = new Radio(html, ((String) this.skins[i][1]).equalsIgnoreCase(App.data.roleUrl), this);
         }
@@ -51,7 +51,7 @@ public class Skin extends JFrame implements ActionListener {
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.setSize(550, 100);
+        this.setSize(450, 100);
         this.setVisible(true);
     }
 

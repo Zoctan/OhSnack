@@ -10,13 +10,13 @@ import java.awt.event.ActionListener;
  */
 public class Radio extends JRadioButton {
 
-    public Radio(String name, ActionListener listener) {
-        super(name);
+    public Radio(String text, ActionListener listener) {
+        super(text);
         this.addActionListener(listener);
     }
 
-    public Radio(String iconPath, boolean selected, ActionListener listener) {
-        super(iconPath, selected);
+    public Radio(String text, boolean selected, ActionListener listener) {
+        super(text, selected);
         this.addActionListener(listener);
     }
 }

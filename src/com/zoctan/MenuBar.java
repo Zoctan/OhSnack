@@ -30,10 +30,9 @@ public class MenuBar extends JMenuBar implements ActionListener {
         this.add(this.createFileMenu());
         this.add(this.createSettingMenu());
         this.add(this.createHelpMenu());
-        // 默认开启音乐
-        this.musicMenuItem.setState(true);
-        this.audioPlayer = new AudioPlayer(App.data.backgroundMusicUrl);
-        this.audioPlayer.start();
+        // 背景音乐
+        this.musicMenuItem.setState(App.data.isMusic);
+        this.onMusicChange();
     }
 
     private JMenu createFileMenu() {
@@ -101,6 +100,10 @@ public class MenuBar extends JMenuBar implements ActionListener {
                     App.timer.stop();
                     App.timer.setDelay(1000 / App.data.frames);
                     App.timer.start();
+                    // 菜单栏选项状态
+                    this.musicMenuItem.setState(App.data.isMusic);
+                    this.onMusicChange();
+                    this.debugMenuItem.setState(App.data.isDebug);
                     // 重绘游戏
                     App.setFrame(App.data.windowsSize.getX(), App.data.windowsSize.getY());
                     App.panel.repaint();
@@ -127,16 +130,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         } else if (event.getSource() == this.skinMenuItem) {
             new Skin("皮肤");
         } else if (event.getSource() == this.musicMenuItem) {
-            if (this.audioPlayer == null) {
-                this.audioPlayer = new AudioPlayer(App.data.backgroundMusicUrl);
-            }
-            // 背景音乐
-            if (this.musicMenuItem.getState()) {
-                this.audioPlayer.start();
-            } else {
-                this.audioPlayer.close();
-                this.audioPlayer = null;
-            }
+            this.onMusicChange();
         } else if (event.getSource() == this.debugMenuItem) {
             App.data.isDebug = this.debugMenuItem.getState();
         } else if (event.getSource() == this.helpMenuItem) {
@@ -161,5 +155,22 @@ public class MenuBar extends JMenuBar implements ActionListener {
                 break;
         }
         return 0;
+    }
+
+    private void onMusicChange() {
+        // 背景音乐
+        if (this.musicMenuItem.getState()) {
+            if (this.audioPlayer == null) {
+                this.audioPlayer = new AudioPlayer(App.data.backgroundMusicUrl);
+            }
+            this.audioPlayer.start();
+            App.data.isMusic = true;
+        } else {
+            if (this.audioPlayer != null) {
+                this.audioPlayer.close();
+                this.audioPlayer = null;
+            }
+            App.data.isMusic = false;
+        }
     }
 }

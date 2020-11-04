@@ -12,6 +12,7 @@ public class Data implements Serializable {
     public boolean isStart = false;
     public boolean isFail = false;
     public boolean isDebug = false;
+    public boolean isMusic = false;
     public int score;
     public Snack snack;
     public Direction snackDirection;
