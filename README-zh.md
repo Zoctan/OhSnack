@@ -1,22 +1,22 @@
-# Oh!Snack
+# 噢！贪吃蛇
 
 ![stars](https://img.shields.io/github/stars/Zoctan/OhSnack.svg?style=flat-square&label=Stars)
 ![license](https://img.shields.io/github/license/Zoctan/OhSnack.svg?style=flat-square)
 
-English | [简体中文](./README-zh.md)
+[English](./README.md) | 简体中文
 
-🐍Snake game code by Java.
+Java 实现的贪吃蛇🐍
 
-## Function
+## 功能
 
-    - [x] Basic operation
-    - [x] Save/Load record
-    - [x] Profile setting
-    - [x] Skin setting
-    - [x] Background music
-    - [ ] Doc
+    - [x] 基本游戏
+    - [x] 保存/载入存档
+    - [x] 动态配置
+    - [x] 皮肤配置
+    - [x] 背景音乐
+    - [ ] 文档完善
 
-## Preview
+## 预览
 
 <table>
 	<tr>
