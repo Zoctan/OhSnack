@@ -9,11 +9,14 @@ English | [简体中文](./README-zh.md)
 
 ## Function
 
+* Done：
     - [x] Basic operation
     - [x] Save/Load record
     - [x] Profile setting
     - [x] Skin setting
     - [x] Background music
+
+* Future：
     - [ ] Doc
 
 ## Preview
