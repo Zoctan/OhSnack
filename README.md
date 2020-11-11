@@ -5,7 +5,7 @@
 
 English | [简体中文](./README-zh.md)
 
-🐍Snake game in Java.
+🐍Snake game in Java. (BGM + Skin + Record Save/Load)
 
 ## Function
 
