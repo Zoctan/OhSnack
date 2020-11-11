@@ -5,7 +5,7 @@
 
 English | [简体中文](./README-zh.md)
 
-🐍Snake game code by Java.
+🐍Snake game in Java.
 
 ## Function
 
